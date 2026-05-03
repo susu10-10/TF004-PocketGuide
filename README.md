@@ -8,7 +8,7 @@ This guide is based on the **Official Terraform Documentation** and the [**Terra
 
 I created this guide because I know that not everyone has the budget for paid courses. Official documentation is the gold standard for learning, but it can feel overwhelming when you're just starting out.
 
-I passed my certification using only the official docs by focusing on the **core workflow** and **hands-on practice**. You don't need a massive Cloud setup to master Terraform. With just a local computer, time, and commitment, you can learn everything you need to succeed. 
+I passed my certification using only the official docs by focusing on the **core workflow** and **hands-on practice**. Little to no Cloud setup to get started with Terraform. With just a local computer, time, and commitment, you can build a strong foundation in Terraform.
 
 This guide is my way of **_paying it forward_** to help you pass your exam using free, high-quality resources.
 
