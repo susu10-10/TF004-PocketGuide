@@ -336,7 +336,6 @@ When Terraform generates an execution plan, it analyzes the configuration and th
 ⬜ Destroy and recreate a resource because a change cannot be applied in-place.
 ```
 
-
 <details>
 <summary>Show answers</summary>
 
