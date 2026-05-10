@@ -205,31 +205,31 @@ Instructions:
 
 **Section A: `True` or `False`**
 
-Question 1:
+**Question 1:**
 Terraform's configuration language is procedural, requiring you to define the specific steps and order of operations to reach the desired end state.
 ```
 ⬜ True
 ⬜ False
 ```
-Question 2:
+**Question 2:**
 One advantage of Infrastructure as Code is that it enables the use of version control systems (VCS) to track changes to infrastructure definitions over time.
 ```
 ⬜ True
 ⬜ False
 ```
-Question 3:
+**Question 3:**
 When using Terraform, you must use a different command syntax (e.g., `terraform aws-plan` vs `terraform azure-plan`) depending on which cloud provider you are targeting.
 ```
 ⬜ True
 ⬜ False
 ```
-Question 4:
+**Question 4:**
 The "Idempotency" provided by Terraform means that running `terraform apply` 10 times in a row will result in the creation of 10 identical sets of resources.
 ```
 ⬜ True
 ⬜ False`
 ```
-Question 5:
+**Question 5:**
 A key characteristic of IaC is that infrastructure is defined in human-readable, machine-executable configuration files rather than through manual GUI operations.
 ```
 ⬜ True
@@ -238,7 +238,7 @@ A key characteristic of IaC is that infrastructure is defined in human-readable,
 
 **Section B: Multiple Choice (Single Answer)**
 
-Question 6:
+**Question 6:**
 Which of the following best describes the role of the execution plan in the `terraform plan` command?
 ```
 ⬜ It executes the necessary API calls to provision the infrastructure.
@@ -247,7 +247,7 @@ Which of the following best describes the role of the execution plan in the `ter
 ⬜ It validates the syntax of the configuration files.
 ```
 
-Question 7:
+**Question 7:**
 Terraform manages resources across multiple cloud providers (e.g., AWS and Azure) primarily through the use of:
 ```
 ⬜ A single, universal cloud API standard.
@@ -256,7 +256,7 @@ Terraform manages resources across multiple cloud providers (e.g., AWS and Azure
 ⬜ A central management console at console.terraform.io.
 ```
 
-Question 8:
+**Question 8:**
 An organization is using Terraform to manage their AWS EC2 instances and also their Datadog monitoring dashboards. What term describes Terraform's ability to manage these two distinct types of services with the same workflow?
 ```
 ⬜ Multi-cloud provisioning
@@ -265,7 +265,7 @@ An organization is using Terraform to manage their AWS EC2 instances and also th
 ⬜ Policy as Code
 ```
 
-Question 9:
+**Question 9:**
 What is the primary benefit of using a declarative language (like HCL) over a procedural script (like Bash) for infrastructure provisioning?
 ```
 ⬜ Declarative languages execute commands much faster than procedural scripts.
@@ -274,7 +274,7 @@ What is the primary benefit of using a declarative language (like HCL) over a pr
 ⬜ Declarative languages do not require an internet connection.
 ```
 
-Question 10:
+**Question 10:**
 You have a Terraform configuration that successfully created a security group. You accidentally delete this security group manually via the AWS Console. What happens the next time you run `terraform apply`?
 ```
 
@@ -284,9 +284,9 @@ You have a Terraform configuration that successfully created a security group. Y
 ⬜ Terraform will delete the entry from the state file automatically.
 ```
 
-**Section C: Multiple Answer (Select Multiple**)
+**Section C: Multiple Answer (Select Multiple)**
 
-Question 11:
+**Question 11:**
 Which of the following are recognized benefits of adopting Infrastructure as Code (IaC)? (Select **THREE**)
 ```
 ⬜ Reduced risk of human error through automation.
@@ -297,7 +297,7 @@ Which of the following are recognized benefits of adopting Infrastructure as Cod
 ⬜ Elimination of all network latency.
 ```
 
-Question 12:
+**Question 12:**
 In the context of Terraform workflows, which two characteristics define an "Immutable Infrastructure" approach? (Select **TWO**)
 ```
 
@@ -308,7 +308,7 @@ In the context of Terraform workflows, which two characteristics define an "Immu
 ⬜ Relying on the state file to track incremental changes to a single server over its lifespan.
 ```
 
-Question 13:
+**Question 13:**
 Which of the following actions occur during the `terraform init` command? (Select **TWO**)
 ```
 ⬜ Reading the state file to determine resource drift.
@@ -317,7 +317,8 @@ Which of the following actions occur during the `terraform init` command? (Selec
 ⬜ Initializing the backend configuration for state storage.
 ⬜ Applying the changes required to reach the desired state.
 ```
-Question 14:
+
+**Question 14:**
 Terraform is considered "service-agnostic" because it can manage a variety of resource types. Which of the following are examples of resources Terraform can manage using this unified workflow? (Select **THREE**)
 ```
 ⬜ Compute instances (e.g., AWS EC2, Azure VM).
@@ -326,7 +327,8 @@ Terraform is considered "service-agnostic" because it can manage a variety of re
 ⬜ Physical server rack power distribution units (PDUs).
 ⬜ DNS records (e.g., Cloudflare, Route53).
 ```
-Question 15:
+
+**Question 15:**
 When Terraform generates an execution plan, it analyzes the configuration and the state. Which of the following actions might Terraform propose in that plan? (Select **THREE**)
 ```
 ⬜ Create a new resource that exists in the configuration but not in state.
