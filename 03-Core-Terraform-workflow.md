@@ -2,24 +2,29 @@
 
 >This is a very hands-on objective and one you will use daily. Following the offical guide's structure exactly:
 
-> Because this is alot, i created links to each sub-objective so you can jump to the one you want to focus on. I recommend going through them in order, but feel free to skip around as needed.
+> Because this is alot, you can jump to the one you want to focus on. I recommend going through them in order, but feel free to skip around as needed.
 
 ## 📑 Objectives
 
-- [3a: Describe the Terraform workflow](#objective-3a-describe-the-terraform-workflow-write-plan-apply)
-- [3b: Initialize a Terraform working directory (terraform init deep dive)](#objective-3b-initialize-a-terraform-working-directory-terraform-init-deep-dive)
-- [3c: Validate a Terraform configuration (terraform validate)](#objective-3c-validate-a-terraform-configuration-terraform-validate)
-- [3d: Generate and review an execution plan (terraform plan)](#objective-3d-generate-and-review-an-execution-plan-terraform-plan)
-- [3e: Apply changes to infrastructure (terraform apply)](#objective-3e-apply-changes-to-infrastructure-terraform-apply)
-- [3f: Destroy Terraform-managed infrastructure (terraform-destroy)](#objective-3f-destroy-terraform-managed-infrastructure-terraform-destroy)
-- [3g: Apply formatting and style adjustments (terraform fmt)](#objective-3g-apply-formatting-and-style-adjustments-terraform-fmt)
+- [Objective 3a: Describe the Terraform workflow](#objective-3a-describe-the-terraform-workflow)
 
+- [Objective 3b: Initialize a Terraform working directory (terraform init deep dive)](#objective-3b-initialize-a-terraform-working-directory-terraform-init)
 
+- [Objective 3c: Validate a Terraform configuration (terraform validate)](#objective-3c-validate-a-terraform-configuration-terraform-validate)
 
+- [Objective 3d: Generate and review an execution plan (terraform plan)](#objective-3d-generate-and-review-an-execution-plan-terraform-plan)
+
+- [Objective 3e: Apply changes to infrastructure (terraform apply)](#objective-3e-apply-changes-to-infrastructure-terraform-apply)
+
+- [Objective 3f: Destroy Terraform-managed infrastructure (terraform-destroy)](#objective-3f-destroy-terraform-managed-infrastructure-terraform-destroy)
+
+- [Objective 3g: Apply formatting and style adjustments (terraform fmt)](#objective-3g-apply-formatting-and-style-adjustments-terraform-fmt)
+
+- [Objective 3: Quiz](#objective-3-quiz-20-questions)
 
 ## Objective 3a: Describe the Terraform workflow
 
-Source: [Core Terraform Workflow Overview](https://developer.hashicorp.com/terraform/intro/v1.12.x/core-workflow)
+*Source: [`Core Terraform Workflow Overview`](https://developer.hashicorp.com/terraform/intro/v1.12.x/core-workflow), [`Create a terraform plan`](https://developer.hashicorp.com/terraform/tutorials/cli/plan), [`Apply terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/cli/apply), [`Initialize a terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/cli/init)*
 
 ### 3a.1: The Trinity of Terraform
 
@@ -91,11 +96,11 @@ The guide emphasizes how HCP Terraform enhances each stage:
 
 - **Apply**: Secure remote execution, run history, notifications.
 
-We will cover HCP Terraform in depth in Objective 8. For now, know that the core workflow remains the same; HCP Terraform adds collaboration and governance layers.
+> We will cover HCP Terraform in depth in Objective 8. For now, know that the core workflow remains the same; HCP Terraform adds collaboration and governance layers.
 
-### 3a.4: Hands-On Lab — The Core Loop with Local Provider
+### 3a.4: Hands-On Lab: The Core Loop with Local Provider
 
-Goal: Experience the Write → Plan → Apply loop.
+Goal: Experience the `Write` → `Plan` → `Apply` loop.
 
 #### Step 1: Create directory `obj3a-lab` and file `main.tf`
 
@@ -134,11 +139,44 @@ resource "local_file" "example" {
 
 - Run `terraform apply`. File is deleted.
 
-This loop is the foundation of all Terraform work.
+> This loop is the foundation of all Terraform work.
+
+### 3a.5: Mini-Quiz for 3a
+
+1. True/False: `terraform plan` is read-only and previews the changes Terraform intends to make.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: Which order best describes the core Terraform workflow?
+```
+⬜ Plan → Write → Apply
+⬜ Write → Plan → Apply
+⬜ Write → Apply → Plan
+```
+
+3. Multiple Answer: Which are common team workflow additions? (Select TWO)
+```
+⬜ Feature branches and pull requests
+⬜ Shared remote state backend
+⬜ Editing the state file manually for speed
+⬜ Skipping `plan` in CI to reduce noise
+```
+
+<details>
+
+<summary>Show answers</summary>
+
+1. True — `terraform plan` previews changes and does not modify infrastructure.
+2. Write → Plan → Apply.
+3. Feature branches and pull requests; shared remote state backend.
+
+</details>
 
 ## Objective 3b: Initialize a Terraform working directory (terraform init)
 
-Source: [Initialize Terraform configuration](https://developer.hashicorp.com/terraform/tutorials/cli/init), [terraform init command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/init)
+*Source: [`Initialize Terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/cli/init), [`terraform init command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/init), [`Dependency lock file`](https://developer.hashicorp.com/terraform/language/v1.12.x/files/dependency-lock)*
 
 ### 3b.1: What `terraform init` Does
 
@@ -209,7 +247,7 @@ terraform init -backend-config=backend.hcl
 
 **Important Note:** The backend block cannot use `variables`, but partial configuration allows dynamic values via CLI.
 
-### 3b.5: Hands-On Lab — `terraform init` Flags
+### 3b.5: Hands-On Lab: `terraform init` Flags
 
 **Goal:** Observe the effect of `-upgrade` and lock file behavior.
 
@@ -240,9 +278,41 @@ Note version installed (e.g., 3.5.1). Observe lock file created.
 
 - Run `terraform init`. It creates new lock file with latest matching version.
 
+### 3b.6: Mini-Quiz: `terraform init`
+
+1. True/False: `terraform init` can install provider plugins and download child modules.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: Which file stores the pinned provider versions and checksums?
+```
+⬜ terraform.tfstate
+⬜ .terraform.lock.hcl
+⬜ backend.hcl
+```
+
+3. Multiple Choice: What does `terraform init -upgrade` do?
+```
+⬜ Recreates all infrastructure from scratch
+⬜ Checks for newer acceptable provider/module versions and updates the lock file when needed
+⬜ Validates configuration without downloading anything
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. True — `init` prepares the working directory, including providers and modules.
+2. `.terraform.lock.hcl`.
+3. It checks for newer acceptable versions and updates the lock file when needed.
+
+</details>
+
+
 ## Objective 3c: Validate a Terraform configuration (`terraform validate`)
 
-Source: [terraform validate command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/validate), [Initialize Terraform configuration](https://developer.hashicorp.com/terraform/tutorials/cli/init)
+*Source: [`terraform validate command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/validate), [`Initialize Terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/configuration-language/troubleshooting-workflow#validate-your-configuration)*
 
 ### 3c.1: Purpose of `terraform validate`
 
@@ -306,6 +376,7 @@ resource "local_file" "bad" {
   filename = "test.txt"
 }
 ```
+
 #### Step 2: Run `terraform init` (required).
 
 #### Step 3: Run `terraform validate`.
@@ -322,9 +393,42 @@ resource "local_file" "bad" {
 
 >This reinforces what `terraform validate` catches and what it doesn't.
 
+### 3c.6: Mini-Quiz: `terraform validate`
+
+1. True/False: `terraform validate` checks provider APIs to confirm that an AMI ID or resource name actually exists.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: What prerequisite does `terraform validate` usually need?
+```
+⬜ A generated plan file
+⬜ An initialized working directory with providers/modules installed
+⬜ A remote backend only
+```
+
+3. Multiple Answer: Which issues can `terraform validate` catch? (Select TWO)
+```
+⬜ HCL syntax errors
+⬜ Missing required arguments
+⬜ Real-world API permission problems
+⬜ Global uniqueness of resource names
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. False — validate does not call remote APIs.
+2. An initialized working directory with providers/modules installed.
+3. HCL syntax errors and missing required arguments.
+
+</details>
+
+
 ## Objective 3d: Generate and review an execution plan (terraform plan)
 
-Source: [Create a Terraform plan](https://developer.hashicorp.com/terraform/tutorials/cli/plan), [terraform plan command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/plan)
+*Source: [`Create a Terraform plan`](https://developer.hashicorp.com/terraform/tutorials/cli/plan), [`terraform plan command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/plan), [`Resource graph`](https://developer.hashicorp.com/terraform/internals/v1.12.x/graph)*
 
 ### 3d.1: What `terraform plan` Does
 
@@ -361,7 +465,7 @@ Option|Purpose
 
 ### 3d.4: Saved Plans
 
-You can save a plan to a file using -out=FILENAME:
+You can save a plan to a file using `-out=FILENAME`:
 
 ```bash
 terraform plan -out=tfplan
@@ -385,15 +489,15 @@ terraform apply tfplan
 
 The plan uses symbols to indicate actions:
 
-`+` : Create
+- `+` : Create
 
-`-` : Destroy
+- `-` : Destroy
 
-`~` : Update in-place
+- `~` : Update in-place
 
-`-/+` : Replace (destroy then create)
+- `-/+` : Replace (destroy then create)
 
-`+/-` : Replace (create before destroy, due to `create_before_destroy` lifecycle)
+- `+/-` : Replace (create before destroy, due to `create_before_destroy` lifecycle)
 
 **Important Note:** Be able to identify what each symbol means in a sample plan output.
 
@@ -401,11 +505,11 @@ The plan uses symbols to indicate actions:
 
 When using `-detailed-exitcode`:
 
-`0` = Succeeded with empty diff (no changes)
+- `0` = Succeeded with empty diff (no changes)
 
-`1` = Error
+- `1` = Error
 
-`2` = Succeeded with non-empty diff (changes present)
+- `2` = Succeeded with non-empty diff (changes present)
 
 >This is crucial for CI/CD scripting.
 
@@ -446,10 +550,42 @@ terraform apply tfplan
 
 #### Step 6: Run `terraform plan -destroy` to see destroy plan without executing.
 
+### Mini-Quiz: `terraform plan`
+
+1. True/False: `terraform plan -refresh-only` updates the state to match reality without changing infrastructure.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: What does `-out=tfplan` do?
+```
+⬜ Saves the exact plan to a file for later application
+⬜ Exports the state file to JSON
+⬜ Runs apply automatically after planning
+```
+
+3. Multiple Answer: Which symbols can appear in a plan output? (Select TWO)
+```
+⬜ `+` create
+⬜ `~` update in-place
+⬜ `!` force update
+⬜ `?` refresh only
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. True.
+2. It saves the exact plan to a file.
+3. `+` create and `~` update in-place.
+
+</details>
+
 
 ## Objective 3e: Apply changes to infrastructure (terraform apply)
 
-Source: [Apply Terraform configuration](https://developer.hashicorp.com/terraform/tutorials/cli/apply), [terraform apply command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/apply)
+*Source: [`Apply Terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/cli/apply), [`terraform apply command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/apply)*
 
 ### 3e.1: Modes of Operation
 
@@ -535,9 +671,41 @@ Observe error.
 
 This demonstrates that you should resolve the error and re-apply.
 
+### 3e.6: Mini-Quiz: `terraform apply`
+
+1. True/False: When you apply a saved plan file, Terraform asks for confirmation again.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: What is the default maximum parallelism for apply operations?
+```
+⬜ 1
+⬜ 5
+⬜ 10
+```
+
+3. Multiple Answer: What happens if an apply fails halfway through? (Select TWO)
+```
+⬜ Terraform may leave the infrastructure partially applied.
+⬜ Terraform automatically rolls back all created resources.
+⬜ Terraform updates state for resources that succeeded.
+⬜ Terraform deletes the state file.
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. False — a saved plan file is treated as approved.
+2. 10.
+3. Terraform may leave infrastructure partially applied, and it updates state for any resources that succeeded.
+
+</details>
+
 ## Objective 3f: Destroy Terraform-managed infrastructure (terraform destroy)
 
-Source: [terraform destroy command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/destroy), [Apply Terraform configuration](https://developer.hashicorp.com/terraform/tutorials/cli/apply)
+*Source: [`terraform destroy command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/destroy), [`Apply Terraform configuration`](https://developer.hashicorp.com/terraform/tutorials/cli/apply)*
 
 ### 3f.1: What destroy Does
 
@@ -576,9 +744,41 @@ For example, if an `EC2 instance` depends on a `security group`, Terraform will 
 
 #### Step 4: Check state file. It should be empty (no resources).
 
+### 3f.5: Mini-Quiz: `terraform destroy`
+
+1. True/False: `terraform destroy` is a convenience alias for `terraform apply -destroy`.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: In which order does Terraform destroy resources?
+```
+⬜ Random order
+⬜ Reverse dependency order
+⬜ Alphabetical order by resource type
+```
+
+3. Multiple Answer: Which statements about `-target` during destroy are true? (Select TWO)
+```
+⬜ It should be used carefully because it can leave dependencies behind.
+⬜ It is recommended for routine destroy operations.
+⬜ It can destroy only a specific resource and its dependencies.
+⬜ It always destroys the entire workspace.
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. True.
+2. Reverse dependency order.
+3. It should be used carefully because it can leave dependencies behind; it can destroy only a specific resource and its dependencies.
+
+</details>
+
 ## Objective 3g: Apply formatting and style adjustments (`terraform fmt`)
 
-Source: [terraform fmt command](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/fmt)
+*Source: [`terraform fmt command`](https://developer.hashicorp.com/terraform/cli/v1.12.x/commands/fmt), [`Format configuration`](https://developer.hashicorp.com/terraform/tutorials/configuration-language/troubleshooting-workflow#format-the-configuration)*
 
 ### 3g.1: Purpose of `fmt`
 
@@ -632,6 +832,37 @@ File is reformatted.
 #### Step 4: Run `terraform fmt -check`. 
 
 Exit code 0 means already formatted.
+
+### 3g.6: Mini-Quiz: `terraform fmt`
+1. True/False: `terraform fmt` rewrites configuration files to a canonical style.
+```
+⬜ True
+⬜ False
+```
+
+2. Multiple Choice: Which option checks formatting without modifying files?
+```
+⬜ `terraform fmt -diff`
+⬜ `terraform fmt -check`
+⬜ `terraform fmt -recursive`
+```
+
+3. Multiple Answer: Which are valid `terraform fmt` behaviors/options? (Select TWO)
+```
+⬜ `-recursive` formats subdirectories too
+⬜ `-check` returns a non-zero exit code if formatting is needed
+⬜ It can be customized via a `.terraform-fmt.conf` file
+⬜ It requires a saved plan file to run
+```
+
+<details>
+<summary>Show answers</summary>
+
+1. True.
+2. `terraform fmt -check`.
+3. `-recursive` formats subdirectories too; `-check` returns non-zero if formatting is needed.
+
+</details>
 
 
 ## Objective 3: Quiz (20+ Questions)
@@ -915,4 +1146,4 @@ You have come a long way in understanding the core Terraform workflow and comman
 
 Remember, the key to mastering Terraform is practice. I encourage you to experiment with the commands and concepts we've covered in this section by creating your own Terraform configurations and applying them to real or simulated infrastructure. This hands-on experience will solidify your understanding and prepare you for the more complex topics ahead.
 
-Lets move on to [Objective 4: Write Terraform configuration using HCL](04-Terraform-Configuration.md) where we will explore the syntax and structure of Terraform's configuration language, HCL.
+Lets move on to [Objective 4 : Write Terraform configuration using HCL](./04-Terraform-configuration-part-1.md) where we will explore the syntax and structure of Terraform's configuration language, HCL.
