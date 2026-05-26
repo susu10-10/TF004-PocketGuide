@@ -398,7 +398,69 @@ terraform state push current-state.json
 
 ---
 
-### 7b.6: Hands-On Lab — State Inspection
+### 7b.6: Practical CLI patterns and CI examples
+
+This section collects common command patterns, flags, and CI-friendly examples to help you operate Terraform safely in production.
+
+Key patterns:
+
+- Create and save a plan for review or CI-driven apply:
+
+```bash
+terraform plan -out=tfplan
+# Save machine-readable plan for auditing
+terraform show -json tfplan > tfplan.json
+```
+
+- Apply a previously saved plan (CI or manual approval):
+
+```bash
+terraform apply "tfplan"
+```
+
+- Use `-detailed-exitcode` in CI to detect changes without failing on "no changes":
+
+```bash
+terraform plan -detailed-exitcode -out=tfplan || PLAN_EXIT=$?
+if [ "$PLAN_EXIT" -eq 2 ]; then
+  echo "Changes detected"
+  # Optionally fail the pipeline or post a message to PR
+fi
+```
+
+- Formatting and validation gates (pre-merge):
+
+```bash
+terraform fmt -check -recursive
+terraform validate
+```
+
+- Produce JSON state for automated checks and drift detection:
+
+```bash
+terraform show -json > state.json
+jq -r '.values.root_module.resources[] | select(.type=="aws_instance") | .address' state.json
+```
+
+CI workflow example (simplified):
+
+1. `terraform fmt -check -recursive`
+2. `terraform init -input=false`
+3. `terraform validate`
+4. `terraform plan -detailed-exitcode -out=tfplan`
+5. If changes, optionally require manual approval then `terraform apply tfplan`
+
+- Notes & best practices:
+
+- For a concise command reference and CI examples, see the CLI appendix: [CLI-Appendix.md](CLI-Appendix.md).
+
+- Pin Terraform version in CI to ensure consistent `show -json` output.
+- Always run `terraform init` early in CI to download providers and set up the backend.
+- Store credentials in secure variables (CI secrets) and prefer short-lived or role-based credentials.
+- Limit `terraform state push` usage; prefer `terraform import` / `state mv` for controlled edits.
+
+
+### 7b.7: Hands-On Lab — State Inspection
 
 We'll use the state file from any previous lab (e.g., the `obj6d-lab` or create a quick one).
 
@@ -432,7 +494,7 @@ resource "local_file" "log" {
 5. Run `terraform state pull > state-backup.json` to save a copy of the state.
 6. Run `terraform state show local_file.log` to see the filename and content.
 
-### 7b.7: Mini-Quiz for 7b
+### 7b.8: Mini-Quiz for 7b
 
 1. True/False: `terraform state list` shows only managed resources; data sources are excluded.
 2. Multiple Choice: Which command would you use to see the detailed attributes of a specific resource from the state file?
@@ -556,6 +618,7 @@ We'll enable logging for a simple operation and inspect the output.
 **Directory:** `obj7c-lab`
 
 **Step 1: Create a simple configuration.**
+
 ```hcl
 # main.tf
 resource "local_file" "test" {
@@ -565,6 +628,7 @@ resource "local_file" "test" {
 ```
 
 **Step 2: Enable logging and run apply.**
+
 ```bash
 terraform init
 
@@ -576,11 +640,13 @@ terraform apply -auto-approve
 ```
 
 **Step 3: Inspect the log file.**
+
 ```bash
 cat apply-trace.log | head -50
 ```
 
 You'll see detailed entries about:
+
 - Provider initialization
 - State file reading
 - Plan generation
@@ -588,6 +654,7 @@ You'll see detailed entries about:
 - State writing
 
 **Step 4: Disable logging.**
+
 ```bash
 unset TF_LOG
 unset TF_LOG_PATH
@@ -610,6 +677,7 @@ unset TF_LOG_PATH
 
 
 <details>
+
 <summary>Show Answers</summary>
 1. False - `TF_LOG=TRACE` is more verbose than `TF_LOG=INFO`. The order of verbosity from most to least is: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`.
 2. B - `TF_LOG_PATH` is the environment variable used to specify a file path for Terraform logs. Setting this variable directs all logs to the specified file instead of `stderr`.
@@ -677,13 +745,11 @@ Secrets Lab — Use a secret manager
 - In CI, prefer `TF_LOG=WARN` and capture logs to an artifact only for failed runs. Use your CI provider's log-redaction features to mask known secret patterns.
 - If you must collect verbose logs for support, rotate any credentials used during the debug session and store logs in a restricted location.
 
-
----
+--
 
 ## Objective 7: Quiz
 
 > Good luck, Have Fun 😎 and don't forget to Debug your way through these series of questions below
-
 
 **Question 1 (True/False):**
 
@@ -692,12 +758,14 @@ The `import` block can generate a complete Terraform configuration for the impor
 **Question 2 (Multiple Choice):**
 
 You have an existing EC2 instance `i-abc123` that you want to bring under Terraform management. You write a `resource "aws_instance" "managed"` block and an `import` block with `id = "i-abc123"` and `to = aws_instance.managed`. What command do you run to complete the import?
+
 ```
 ⬜ `terraform import`
 ⬜ `terraform apply`
 ⬜ `terraform plan -import`
 ⬜ `terraform state push`
 ```
+
 **Question 3 (True/False):**
 
 After a successful import, you can remove the `import` block from your configuration, and Terraform will continue to manage the resource normally.
