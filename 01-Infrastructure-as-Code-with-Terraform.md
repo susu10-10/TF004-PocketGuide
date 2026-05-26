@@ -15,6 +15,8 @@ Understand the purpose of Terraform and the concept of Infrastructure as Code (I
 
 - [**Objective 1 Quiz**](#objective-1-quiz)
 
+---
+
 ## Objective 1a: What IaC is?
 
 Imagine you are tasked with building a house. You have two choices:
@@ -31,9 +33,9 @@ Imagine you are tasked with building a house. You have two choices:
 
 Terraform is a declarative tool. This means you tell it what the finished house should look like (the **_End State_**), and the it figures out the steps to build it. You don't have to tell it _pick up the hammer_ or _buy the nails_. You just say **_I want 4 windows_**, and it makes it happen.
 
+---
 
 ## Objective 1b: Advantages of IaC patterns ("Why Bother?")
-
 
 ### Why Terraform and IaC patterns?
 
@@ -89,10 +91,11 @@ Why use a blueprint (code) instead of just building the house manually?
 
     - **Automation & CI/CD:** Because infrastructure is code, it can be plugged into automated pipelines for testing and deployment, just like application software.
 
+---
 
 ## Objective 1c: How Terraform manages multi-cloud, hybrid, and service-agnostic workflows
 
-  ## Common misconceptions
+  ### Common misconceptions
 
   - **Terraform is a configuration management tool.** (False): 
   
@@ -159,6 +162,7 @@ This isn't just a workflow; it's a safety net. `terraform plan` is a **_dry-run 
 **State** is the Source of Truth (and Pain): Terraform is stateless logic, but it needs a database to know what it already built. That's the State File. It's a giant `JSON` blob, mapping `resource "aws_instance" "web"` to `i-12345`. 
 
 > **Never edit the state file by hand. We'll keep repeating this. Till the end of time, we'll spend a lot of time here.**
+
 
 
 ## Part 2: Hands-On Lab
@@ -257,7 +261,7 @@ This is the power of Terraform's state management and drift detection. It knows 
 
 ## Objective 1: Quiz
 
-Instructions:
+#### Instructions:
 
 - Read each question carefully.
 

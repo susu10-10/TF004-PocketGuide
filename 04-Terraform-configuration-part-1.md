@@ -75,6 +75,8 @@ These are covered in depth in later objectives.
 
 - When you remove a `resource` block, Terraform plans to destroy the real-world object.
 
+---
+
 ### 4a.2: The `data` Block — Querying Existing Information
 
 A `data` block (data source) instructs Terraform to read information from an external source without managing it. Data sources are read-only, so they are for discovery, lookup, and reuse - not ownership.
@@ -123,6 +125,8 @@ Purpose|Manage infrastructure|Query existing information
 State|Full lifecycle in state file|Result cached in state, but not "managed"
 Apply|Creates/Updates/Destroys|Only reads
 ID format|`resource.TYPE.NAME`|`data.TYPE.NAME`
+
+---
 
 ### 4a.3: Meta-Arguments for `data` Blocks
 
@@ -185,6 +189,8 @@ output "file_content" {
 6. `terraform apply` — File restored.
 
 This demonstrates the fundamental difference: Terraform manages the resource, but only reads the data source.
+
+---
 
 ### 4a.5: Mini-Quiz for 4a
 
@@ -277,6 +283,8 @@ A resource address uniquely identifies a resource instance. The documentation's 
 
 **Important Note:** Resource addresses are used with commands like `terraform state list`, `terraform state rm`, `terraform taint` (deprecated), and `terraform plan -replace=ADDRESS`. Think of the address as Terraform's exact pointer to one object in the graph and in state.
 
+---
+
 ### 4b.4: Splat Expressions
 
 When a resource uses count or `for_each`, it represents multiple instances. To get a list of an attribute across all instances, use the splat operator `[*]`.
@@ -300,6 +308,7 @@ output "all_ips" {
   value = values(aws_instance.web)[*].public_ip
 }
 ```
+---
 
 ### 4b.5: Implicit vs. Explicit Dependencies
 
@@ -328,6 +337,8 @@ resource "aws_instance" "app" {
 ```
 
 **Best Practice:** Rely on implicit dependencies whenever possible. Use explicit depends_on only when necessary to avoid unnecessary coupling or when the dependency is not captured by references.
+
+---
 
 ### 4b.6: Hands-On Lab — References and Dependencies
 
@@ -380,6 +391,8 @@ output "config_file" {
 3. `terraform apply` — Observe creation order.
 
 Examine `terraform.tfstate` to see the dependencies arrays.
+
+---
 
 ### 4b.7: Mini-Quiz - References and Dependencies
 
@@ -472,6 +485,8 @@ When a value is assigned multiple ways, Terraform uses this order (highest to lo
 
 If none provided and no default, Terraform prompts interactively.
 
+---
+
 ### 4c.2: Local Values (`locals` Block)
 
 Locals are internal constants or computed values within a module. They are not exposed externally.
@@ -514,6 +529,8 @@ output "instance_public_ip" {
 
 - Sensitive outputs are still stored in plaintext in the state file.
 
+---
+
 ### 4c.4: Variable Definition Files
 
 Files with `.tfvars` or `.auto.tfvars` extension are automatically loaded. They use simple HCL syntax:
@@ -530,6 +547,8 @@ tags = {
 ```
 
 **Important Note:** Never commit `.tfvars` files containing secrets. Use remote variable storage (HCP Terraform, Vault) or environment variables.
+
+---
 
 ### 4c.5: Hands-On Lab — Variables and Outputs
 
@@ -598,6 +617,8 @@ output "file_content" {
 5. `terraform output -json` — file_content is exposed! This demonstrates that sensitive is only a UI redaction.
 
 6. `terraform output file_content` — Shows the actual content.
+
+---
 
 ### 4c.6: Mini-Quiz - Variables and Outputs
 
@@ -701,6 +722,8 @@ variable "config" {
 ```
 If the caller omits enabled, it defaults to true.
 
+---
+
 ### 4d.6: Hands-On Lab — Complex Types
 
 Directory: obj4d-lab
@@ -756,7 +779,10 @@ Steps:
 
 Try overriding with a terraform.tfvars that provides a different servers list.
 
+---
+
 ### 4d.7: Mini-Quiz - Complex Types
+
 True/False: A tuple type requires all elements to be of the same type.
 
 Multiple Choice: Which type would you use for a variable that expects a map where all values are strings?
