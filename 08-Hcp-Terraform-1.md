@@ -279,9 +279,25 @@ Workspaces can send notifications (via Slack, email, webhooks) for run events: r
 
 The Explorer provides a queryable interface across your organization's workspaces, modules, providers, and Terraform versions. You can answer questions like "Which workspaces still use Terraform 1.0?" or "Which workspaces have drift?"
 
+### 8b.6: Private Module Registry (publishing modules)
+
+HCP Terraform's private registry lets your org publish modules for reuse. High-level steps:
+
+1. Create a VCS repository containing your module (use `modules/my-module` layout and include `README.md`).
+2. Tag releases with semantic versions (e.g., `v1.0.0`).
+3. In the HCP Terraform UI, go to Registry → Publish Module and connect the VCS repo.
+4. Add a `versions` constraint in your consuming configuration's `required_providers`/module source or use the registry source `app.terraform.io/my-org/my-module/aws`.
+
+#### Best practices:
+
+- Use semantic versioning and changelogs.
+- Keep modules small and focused (one responsibility).
+- Include examples and input/output documentation.
+- Use a CI job to run `terraform validate` and `tflint` against module branches before publishing.
+
 ---
 
-### 8b.6: Mini-Quiz - HCP Terraform Collaboration and Governance
+### 8b.7: Mini-Quiz - HCP Terraform Collaboration and Governance
 
 1. True/False: In HCP Terraform, a user can be a member of multiple teams, and their effective permissions are the union of all team permissions.
 2. Multiple Choice: Which policy enforcement level prevents a run from being applied unless an override is provided by an authorized user?
@@ -289,7 +305,7 @@ The Explorer provides a queryable interface across your organization's workspace
    B. `hard-mandatory`
    C. `soft-mandatory`
    D. `warning`
-3. Multiple Answer: Which of the following are collaboration features provided by HCP Terraform? (Select THREE)
+3. Multiple Answer: Which of the following are collaboration features provided by HCP Terraform? (Select FOUR)
    A. Teams and role-based access control
    B. Policy enforcement with Sentinel/OPA
    C. Automatic application source code generation
@@ -302,13 +318,14 @@ The Explorer provides a queryable interface across your organization's workspace
 
 <summary>Show Answers</summary>
 
-1. False. With the `cloud` block configured, `terraform apply` queues a run that executes remotely on HCP Terraform's infrastructure.
+1. True — Users may belong to multiple teams and receive the union of those team permissions.
 
-2. B. The `cloud` block is used to connect to HCP Terraform. The `backend "remote"` block is the older syntax for remote state only, not the full HCP Terraform integration.
+2. C (`soft-mandatory`) — `soft-mandatory` requires an authorized override to allow an apply when the policy fails.
 
-3. A, C, D, E. All of these can initiate a run. `terraform plan` does not initiate a run; it generates a speculative plan locally without queuing anything.
+3. A, B, D, E — Teams/RBAC, policy enforcement, change requests, and a private module registry are collaboration features. (C is incorrect.)
 
 </details>
+
 
 ## Objective 8c: Describe how to organize and use HCP Terraform workspaces and projects
 
@@ -317,6 +334,7 @@ The Explorer provides a queryable interface across your organization's workspace
 ### 8c.1: Workspaces
 
 A workspace is the primary unit of organization. It contains everything needed to manage a collection of infrastructure:
+
 - Configuration version (the `.tf` files).
 - State file (encrypted, versioned).
 - Variables (Terraform and environment).
@@ -324,6 +342,7 @@ A workspace is the primary unit of organization. It contains everything needed t
 - Settings (execution mode, auto-apply, notifications).
 
 **HCP Terraform workspaces vs. Terraform CLI workspaces:**
+
 - **CLI workspaces** are alternate state files within the same directory, managed with `terraform workspace select`. They're for the same configuration applied to multiple environments (dev/staging/prod).
 - **HCP Terraform workspaces** are fully independent. They can have entirely different configurations, variables, and execution modes. They're analogous to separate working directories in the CLI world.
 
@@ -344,13 +363,14 @@ Projects are containers for workspaces. They let you group related workspaces an
 Variable sets are reusable collections of variables that you can apply to multiple workspaces. They can be scoped globally (all workspaces in the organization), to specific projects, or to specific workspaces.
 
 **Precedence (highest to lowest):**
-1. Workspace-specific variable
-2. Variable set applied to the workspace (lexical order by name if multiple sets)
-3. Priority variable set
+
+1. Priority variable set
+2. Workspace-specific variable
+3. Variable set applied to the workspace (lexical order by name if multiple sets)
 4. Environment variable `TF_VAR_*`
 5. Default value in the `variable` block
 
-**Priority variable sets** are newer (Terraform 1.9+) and always take precedence over all other variable values.
+**Note:** Priority variable sets (introduced in recent Terraform Cloud updates) override workspace-specific variables and non-priority variable sets. Use them sparingly for organization-wide overrides.
 
 ### 8c.4: Run Triggers
 
@@ -450,6 +470,7 @@ terraform {
 ```
 
 **Explanation:**
+
 - `hostname = "app.terraform.io"` — The address of your HCP Terraform instance. For SaaS, this is always `app.terraform.io`. For Terraform Enterprise (self-hosted), you'd provide your company's custom hostname.
 - `organization = "my-org"` — The unique name of your HCP Terraform organization.
 - `workspaces { name = "my-workspace" }` — Specifies a single workspace. Terraform will create it during `init` if it doesn't exist.
@@ -525,9 +546,57 @@ We'll walk through the AWS setup conceptually.
    - `TFC_AWS_RUN_ROLE_ARN` = the ARN of the IAM role.
 5. **No AWS credentials** are stored as workspace variables. Terraform obtains temporary credentials for each run.
 
+### 8d.6: API example — queue a run (curl)
+
+You can queue runs programmatically via the HCP Terraform Runs API. Example (replace placeholders):
+
+```bash
+curl --header "Authorization: Bearer ${TFE_TOKEN}" \
+  --header "Content-Type: application/vnd.api+json" \
+  --data '{"data":{"attributes":{"is-destroy":false,"message":"API triggered run"},"type":"runs","relationships":{"workspace":{"data":{"type":"workspaces","id":"<WORKSPACE_ID>"}}}}}' \
+  https://app.terraform.io/api/v2/runs
+```
+
+The API returns a run object; follow the `apply` status or use the Runs endpoint to poll for progress.
+
+Reference: HCP Terraform API docs for runs.
+
+### 8d.7: Migration commands & best practices
+
+When migrating state to HCP Terraform or changing backends, prefer these safe steps:
+
+1. Backup your local state: `cp terraform.tfstate terraform.tfstate.backup` (or download from remote backend).
+2. Add the `cloud` block to your configuration.
+3. Run `terraform init`: Terraform will prompt to copy state to the cloud backend.
+4. Alternatively, use `terraform init -reconfigure` and `terraform init -migrate-state` to explicitly migrate state when changing backend configuration.
+5. After migration, run `terraform plan` to validate.
+
+Notes:
+- Test migration on a copy of the workspace first.
+- Ensure CI tokens and ACLs are correctly set for workspace access before migrating.
+
+### 8d.8: Minimal policy example (OPA / Rego)
+
+Here's a tiny Rego example that denies creation of an S3 bucket with `acl = "public-read"`:
+
+```rego
+package hcp.policies
+
+deny[msg] {
+  input.planned_changes[_].type == "aws_s3_bucket"
+  some i
+  change := input.planned_changes[_]
+  change.change.after.acl == "public-read"
+  msg = sprintf("S3 bucket %v would be public", [change.address])
+}
+```
+
+For Sentinel, the equivalent policy would inspect the run's planned values and return `false` when a public ACL is detected. See HashiCorp docs for full examples.
+
+
 ---
 
-### 8d.6: Mini-Quiz for 8d
+### 8d.9: Mini-Quiz for 8d
 
 1. True/False: The `cloud` block can coexist with a `backend` block in the same `terraform {}` configuration.
 2. Multiple Choice: Which environment variable overrides the `organization` value in a `cloud` block?
@@ -554,7 +623,6 @@ We'll walk through the AWS setup conceptually.
 
 
 ## Objective 8: Quiz
-
 
 **Question 1 (True/False):**
 When you run `terraform apply` with a `cloud` block configured, the Terraform CLI executes the plan locally and only uploads the state to HCP Terraform.
