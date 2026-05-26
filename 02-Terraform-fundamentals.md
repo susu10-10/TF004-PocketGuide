@@ -375,6 +375,7 @@ provider "aws" {
 
 For Credentials: NEVER hardcode secrets in `.tf` files. Use environment variables (`AWS_ACCESS_KEY_ID`), shared credentials files (`~/.aws/credentials`), or dynamic credentials.
 
+---
 
 ### 2b.5: Hands-On Lab: Observing Provider Behavior
 
@@ -419,6 +420,8 @@ Now open `terraform.tfstate` and examine the provider field for each resource:
 - `random_pet.aliased_example` shows: `"provider": "provider[\"registry.terraform.io/hashicorp/random\"].pet_only"`
 
 > This demonstrates that the state tracks exactly which provider configuration created the resource, which is critical for understanding how Terraform manages dependencies and execution.
+
+---
 
 ### 2b.6: Mini-Quiz - Terraform Providers
 
@@ -486,6 +489,8 @@ terraform {
 
 **Important Note:** The local name (`aws`, `google`, `cloudflare`) is used throughout your configuration to reference that provider. The `source` is only used during `terraform init` to locate the plugin.
 
+---
+
 ### 2c.2: Configuring Each Provider
 
 Each provider needs its own configuration block (or relies on environment variables). There is no requirement to configure all providers if they can authenticate via default methods.
@@ -500,6 +505,7 @@ provider "google" {
   region  = "us-central1"
 }
 ```
+---
 
 ### 2c.3: Cross-Provider Resource References
 
@@ -527,6 +533,8 @@ resource "github_repository" "app" {
 3. During `apply`, Terraform will wait for the AWS provider to create the bucket and return its attributes before instructing the GitHub provider to create the repository.
 
 4. The `github_repository` entry in the state file will record this dependency.
+
+---
 
 ### 2c.4: Handling Provider Name Conflicts
 
@@ -572,6 +580,8 @@ Each provider defines its own set of `resource types` and `data sources`. The do
 - Arguments are in the configuration block (`ami = "..."`).
 
 - Attributes are exported and used in expressions (`aws_instance.web.public_ip`).
+
+---
 
 ### 2c.6: Hands-On Lab: Multi-Provider Orchestration
 
@@ -662,6 +672,8 @@ resource "cloudflare_record" "app_dns" {
 
 > Terraform manages the dependencies automatically. It knows `cloudflare_record` depends on `aws_instance`. It will create the instance first, get the IP, then create the DNS record.
 
+---
+
 ### 2c.7: Multi-account provider aliasing (Hands-On Lab)
 
 When you must manage resources across multiple cloud accounts from one configuration, use aliased provider configurations and the `provider` meta-argument. This keeps credentials and regions explicit and avoids accidental cross-account operations.
@@ -727,6 +739,8 @@ Notes:
 - Avoid hardcoding credentials in `provider` blocks — use `profile`, environment variables, or an external credentials helper.
 - When writing reusable modules, do not configure providers inside modules; instead, accept provider mappings via the `providers` map as shown above so the module can be reused across accounts and regions.
 
+---
+
 ### 2d.5: Mini-Quiz - Multi-Provider Behavior and Cross-Provider References
 
 Quick check on multi-provider behavior and cross-provider references.
@@ -770,6 +784,7 @@ Quick check on multi-provider behavior and cross-provider references.
 
 *Source: [`Purpose of Terraform State`](https://developer.hashicorp.com/terraform/language/v1.12.x/state/purpose), [`Manage Resources in State`](https://developer.hashicorp.com/terraform/tutorials/state/state-cli)*
 
+---
 
 ### 2d.1: Why State is Required (Mapping to the Real World)
 
@@ -782,6 +797,8 @@ Terraform Documentation: `Purpose of Terraform State` section is explicit:
 - **Mapping:** State stores the binding between the logical resource address (`aws_instance.web`) and the physical resource identifier (`i-abc123`).
 
 - **Uniqueness:** Terraform expects a one-to-one mapping. If a remote object is bound to multiple resource instances, the behavior becomes undefined.
+
+---
 
 ### 2d.2: Metadata (Dependencies)
 
@@ -811,6 +828,8 @@ From the Offical Documentation:
 
 -  `-refresh=false` flag can skip this verification entirely (useful in automation when you know nothing has changed externally), relying completely on the cached state.
 
+---
+
 ### 2d.4: State File Format and Location
 
 - Default Location: `terraform.tfstate` in the current working directory.
@@ -820,6 +839,8 @@ From the Offical Documentation:
 - Backup: `terraform.tfstate.backup` is created before each state write.
 
 - Remote State: Storing state remotely (S3, HCP Terraform) enables team collaboration and provides locking.
+
+---
 
 ### 2d.5: State Locking (Critical for Team Collaboration)
 
@@ -832,6 +853,8 @@ From the Offical Documentation:
 - If User B tries to run `terraform apply` simultaneously, they receive an error: "Error acquiring the state lock."
 
 - This prevents race conditions where two people modify the same infrastructure simultaneously, corrupting the state.
+
+---
 
 ### 2d.5: Mini-Quiz - State Locking and Backend Migration
 Quick check on state, locking, and backend migration.
@@ -896,6 +919,8 @@ Quick check on state, locking, and backend migration.
 
 - Use ephemeral values (Terraform 1.10+) or write-only arguments (Terraform 1.11+) to omit values from state entirely.
 
+---
+
 ### 2d.7: Backend Configuration (`backend` Block)
 
 The `backend` block configures where state is stored.
@@ -920,6 +945,8 @@ terraform {
 
 - Changing a backend configuration requires `terraform init -reconfigure` or `-migrate-state`.
 
+---
+
 ### 2d.8: The `cloud` Block vs. `backend` Block
 
 Terraform block reference clarifies:
@@ -930,6 +957,7 @@ Terraform block reference clarifies:
 
 - `cloud` block: A simplified way to connect a configuration directly to HCP Terraform or Terraform Enterprise. It handles both state storage and remote operations. This is the preferred method for HCP Terraform users (Objective 8).
 
+---
 
 ### 2d.9: Hands-On Lab - Inspecting State File and Remote Backend Behavior
 
@@ -1263,6 +1291,7 @@ The Docs section "Purpose of Terraform State" explains:
 
 </details>
 
+---
 
 **State huh?**
 

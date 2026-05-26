@@ -28,12 +28,12 @@ This guide is my way of **_paying it forward_** to help you pass your exam using
 1. [Understand Infrastructure as Code (IaC) Concepts](./01-Infrastructure-as-Code-with-Terraform.md)
 2. [Understand Terraform’s Purpose](./02-Terraform-fundamentals.md)
 3. [Understand Terraform Basics](./03-Core-Terraform-workflow.md)
-4. [Use Terraform CLI (outside core workflow)](./04-Terraform-configuration-part-1.md)
-5. [Use Terraform CLI: Part 2](./04-Terraform-configuration-part-2.md)
+4. [Use Terraform CLI: Part-1](./04-Terraform-configuration-part-1.md)
+5. [Use Terraform CLI: Part-2](./04-Terraform-configuration-part-2.md)
 6. [Terraform Modules](./05-Terraform-modules.md)
 7. [Terraform State Management](./06-Terraform-state-management.md)
 8. [Maintain Infrastructure with Terraform](./07-Maintain-infrastructure-with-Terraform.md)
-9. [Terraform Cloud (HCP Terraform)](./08-HCP-Terraform.md)
+9. [Terraform Cloud (HCP Terraform)](./08-HCP-Terraform-1.md)
 
 
 ## 🛠️ Example Snippets
