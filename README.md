@@ -33,7 +33,7 @@ This guide is my way of **_paying it forward_** to help you pass your exam using
 6. [Terraform Modules](./05-Terraform-modules.md)
 7. [Terraform State Management](./06-Terraform-state-management.md)
 8. [Maintain Infrastructure with Terraform](./07-Maintain-infrastructure-with-Terraform.md)
-9. [Terraform Cloud (HCP Terraform)](./08-HCP-Terraform.md)
+9. [Terraform Cloud (HCP Terraform)](./08-HCP-Terraform-1.md)
 
 
 ## 🛠️ Example Snippets
