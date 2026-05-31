@@ -39,8 +39,9 @@ In this guide, i am sort of **_Paying it Forward_**, and help you in passing you
 5. [Use Terraform CLI: Part-2](./04-Terraform-configuration-part-2.md)
 6. [Terraform Modules](./05-Terraform-modules.md)
 7. [Terraform State Management](./06-Terraform-state-management.md)
-8. [Maintain Infrastructure with Terraform](./07-Maintain-infrastructure-with-Terraform.md)
+8. [Maintain Infrastructure with Terraform](./07-Maintain-infrastructure-with-terraform.md)
 9. [Terraform Cloud (HCP Terraform)](./08-Hcp-Terraform-1.md)
+10. [Command Line Appendix](./CLI-Appendix.md)
 
 
 ## 🛠️ Example Snippets
