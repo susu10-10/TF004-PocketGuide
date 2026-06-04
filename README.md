@@ -1,5 +1,9 @@
 # Terraform Associate 004 Pocket Guide
 
+ <a href="https://www.credly.com/badges/35b5a2fc-d497-42a8-bb21-dbaaba952338/public_url" title="Terraform Associate">
+    <img src="https://images.credly.com/size/70x70/images/0e717fa5-93a1-4203-964c-051b4734b7eb/blob" alt="Terraform Associate" height="70" />
+  </a>
+
 A concise, structured study material made to assist in preparation for the **HashiCorp Certified: Terraform Associate (004)** exam.  
 
 Reference for this study comes from the **Official Terraform Documentation** and the [**Terraform Associate 004 Learning Path**](https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-study-004).
